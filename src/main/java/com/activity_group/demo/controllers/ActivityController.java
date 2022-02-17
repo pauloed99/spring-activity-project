@@ -9,6 +9,7 @@ import com.activity_group.demo.services.ActivityService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 
+@CrossOrigin
 @RestController
 @AllArgsConstructor
 public class ActivityController {
@@ -30,6 +32,11 @@ public class ActivityController {
         if(description == null)
             return ResponseEntity.ok(activityService.findAll());
         return ResponseEntity.ok(activityService.findByDescription(description));
+    }
+    
+    @GetMapping("activityGroups/{id}/activities")
+    public ResponseEntity<List<Activity>> getAllActivitiesByActivityGroup(@PathVariable Long id) {
+        return ResponseEntity.ok(activityService.findAllActivitiesByActivityGroupId(id));
     }
 
     @GetMapping("activities/{id}")
@@ -53,7 +60,7 @@ public class ActivityController {
         activityService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    
     @DeleteMapping("activityGroups/{id}/activities")
     public ResponseEntity<Void> deleteAllByActivityGroup(@PathVariable Long id) {
         activityService.deleteAllActivitiesFromActivityGroup(id);
